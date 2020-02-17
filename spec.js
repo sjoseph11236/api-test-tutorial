@@ -10,5 +10,9 @@ describe('Acme TDD ', ()=> {
       expect(seed.products.bar.name).to.equal('bar');
       expect(seed.products.baz.name).to.equal('baz');
     });
+
+    it('A product belongs to a category ', () => { 
+      expect(seed.products.foo.categoryId).to.equal(seed.categories.catFoo.id);
+    });
   });
 });
