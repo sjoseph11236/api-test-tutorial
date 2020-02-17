@@ -5,9 +5,10 @@ describe('Acme TDD ', ()=> {
   beforeEach( async () => seed = await db.syncAndSeed());
   
   describe('Data Layer', () => { 
-    it('Foo, Bar and Bazz products', ()=> {
+    it('Foo, Bar and Baz products', ()=> {
       expect(seed.products.foo.name).to.equal('foo');
+      expect(seed.products.bar.name).to.equal('bar');
+      expect(seed.products.baz.name).to.equal('baz');
     });
-
   });
 });
