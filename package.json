@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:dev": "mocha spec.js --watch"
+    "test:dev": "DATABASE_URL=postgres://localhost/acme_tdd_test_db mocha spec.js --watch"
   },
   "keywords": [],
   "author": "",

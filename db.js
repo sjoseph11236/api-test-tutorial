@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { STRING, UUID, UUIDV4 } = Sequelize;
+const { STRING, UUID, UUIDV4, DECIMAL, VIRTUAL} = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost:5432/acme_tdd_db', {
   logging:false
 });
@@ -10,7 +10,23 @@ const Product = conn.define('product', {
     type: UUID,
     defaultValue: UUIDV4
   },
-  name: STRING
+  name: {
+    type: STRING,
+    allowNull: false,
+    validate: { 
+      notEmpty: true
+    }
+  },
+  suggestedPrice: {
+    type: DECIMAL,
+    defaultValue: 5
+  } ,
+  isExpensive: { 
+    type: VIRTUAL,
+    get: function() {
+      return this.suggestedPrice > 10 ? true : false;
+    }
+  }
 });
 
 const Category = conn.define('category', { 
@@ -23,6 +39,7 @@ const Category = conn.define('category', {
 });
 
 Product.belongsTo(Category);
+
 const syncAndSeed = async () => {
   await conn.sync({force: true});
   const categories = [
@@ -54,5 +71,9 @@ const syncAndSeed = async () => {
 };
 
 module.exports = { 
-  syncAndSeed
+  syncAndSeed,
+  models : { 
+    Product, 
+    Category
+  }
 }
