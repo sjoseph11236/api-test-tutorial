@@ -18,6 +18,13 @@ describe('Acme TDD ', ()=> {
     });
   });
 
+  describe('findAllExpensiveProducts ', ()=> {
+    it('there is one expensive product', async()=> {
+      const expensive = await Product.findAllExpensive();
+      expect(expensive.length).to.equal(1);
+    });
+  })
+
   describe('isExpensive', () => { 
     it('a product with a suggestedPrice greater than 10 is expensive', ()=> {
       expect(Product.build({ suggestedPrice: 11 }).isExpensive).to.equal(true);
@@ -27,6 +34,13 @@ describe('Acme TDD ', ()=> {
       expect(Product.build({ suggestedPrice: 10 }).isExpensive).to.equal(false);
     });
   })
+
+  describe('hooks', ()=> {
+    it('an empty categoryId will get set to null', async () => {
+      const product = await Product.create({ name: 'quq', categoryId: '' });
+      expect(product.categoryId).to.equal(null);
+    });
+  });
 
   describe('Product validation', () => {
     it('name must be required', ()=> {
