@@ -11,9 +11,11 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.0.1"
+    "mocha": "^7.0.1",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "pg": "^7.18.1",
     "sequelize": "^5.21.4"
   }

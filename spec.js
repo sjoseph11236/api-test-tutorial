@@ -1,6 +1,7 @@
 const { expect } = require('chai');
 const db = require('./db');
 const { Product, Category } = db.models;
+const app = require('supertest')(require('./app'));
 
 describe('Acme TDD ', ()=> { 
   let seed; 
@@ -42,6 +43,8 @@ describe('Acme TDD ', ()=> {
     });
   });
 
+
+
   describe('Product validation', () => {
     it('name must be required', ()=> {
       return Product.create({})
@@ -50,7 +53,7 @@ describe('Acme TDD ', ()=> {
       })
         .catch( ex => expect(ex.errors[0].path).to.equal('name'));
     });
-    it('name cant be an empty string', ()=> {
+    it('name can not be an empty string', ()=> {
       return Product.create({name: ''})
       .then(()=> {
         throw 'nooooo' 
@@ -58,4 +61,48 @@ describe('Acme TDD ', ()=> {
         .catch( ex => expect(ex.errors[0].path).to.equal('name'));
     });
   });
+
+  describe('API', ()=> {
+    describe(' GET/api/products', ()=> {
+      it('returns the products', () => {
+        return app.get('/api/products')
+          .expect(200)
+          .then( response => { 
+            expect(response.body.length).to.equal(3);
+          })
+      });
+    });
+  
+    describe(' POST /api/products', ()=> {
+      it('creates a product', () => {
+        return app.post('/api/products')
+          .send({ name: 'quq', suggestedPrice: 4})
+          .expect(201)
+          .then( response => { 
+            expect(response.body.name).to.equal('quq');
+            expect(response.body.isExpensive).to.equal(false);
+          })
+      });
+    });
+  
+    describe(' PUT /api/products', ()=> {
+      it('creates a product', () => {
+        return app.put(`/api/products/${seed.products.foo.id}`)
+          .send({ name: 'Foo', suggestedPrice: 44})
+          .expect(200)
+          .then( response => { 
+            expect(response.body.name).to.equal('Foo');
+            expect(response.body.isExpensive).to.equal(true);
+          })
+      });
+    });
+  
+    describe(' DELETE /api/products', ()=> {
+      it('creates a product', () => {
+        return app.delete(`/api/products/${seed.products.foo.id}`)
+          .expect(204);
+      });
+    });
+  })
 });
+
